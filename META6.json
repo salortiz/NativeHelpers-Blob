@@ -7,7 +7,7 @@
     "depends" : [ ],
     "build-depends" : [ ],
     "test-depends" : [
-	"Test", "File::Temp"
+	"Test",
     ],
     "provides" : {
 	"NativeHelpers::Blob" : "lib/NativeHelpers/Blob.pm6",

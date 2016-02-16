@@ -2,13 +2,14 @@ use v6;
 use Test;
 use NativeCall;
 
-{
-    use-ok 'NativeHelpers::Blob';
-}
-use NativeHelpers::Blob;
+use-ok 'NativeHelpers::Blob';
+
+use NativeHelpers::Blob; # Need again :-)
 
 my $a = 'Hola a todos'.encode;
-isa-ok $a, utf8;
+my @orig = $a.list;
+
+isa-ok $a, utf8; # Sanity check
 
 ok (my $au = carray-from-blob($a)),	'carray from blob';
 isa-ok $au, CArray;
@@ -20,12 +21,12 @@ isa-ok $am, CArray;
 ok so carray-is-managed($am),		'Is managed';
 ok $am.elems == 12,			'Correct size';
 
-ok $am.list eqv (72, 111, 108, 97, 32, 97, 32, 116, 111, 100, 111, 115), 
-					'Elems match';
+ok $am.list eqv @orig.flat.list,	'Elems match';
 
 my $bu = blob-from-carray($am);
-say $bu.decode;
+is $bu.decode, 'Hola a todos',		'Full trip';
 
-my $b2 = blob-from-carray($au):12size;
-say $b2.decode;
+
+ok (my $b2 = blob-from-carray($au):12size), 'With size';
+is $b2.decode, 'Hola a todos',		'The same';
 
