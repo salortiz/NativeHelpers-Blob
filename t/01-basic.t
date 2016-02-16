@@ -2,6 +2,8 @@ use v6;
 use Test;
 use NativeCall;
 
+paln 14;
+
 use-ok 'NativeHelpers::Blob';
 
 use NativeHelpers::Blob; # Need again :-)
