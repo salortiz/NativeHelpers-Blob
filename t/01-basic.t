@@ -2,7 +2,7 @@ use v6;
 use Test;
 use NativeCall;
 
-paln 14;
+plan 14;
 
 use-ok 'NativeHelpers::Blob';
 
