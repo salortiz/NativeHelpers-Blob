@@ -1,11 +1,12 @@
 use v6;
 
-unit module NativeHelpers::Blob:ver<0.1.0>;
+unit module NativeHelpers::Blob:ver<0.1.1>;
 use NativeCall;
 use MoarVM::Guts::REPRs;
 use nqp;
 
 our $debug = False;
+
 
 my sub memcpy(Pointer $dest, Pointer $src, size_t $size)
     returns Pointer is native() { * };
@@ -44,12 +45,19 @@ our sub blob-new(Mu \type = uint8, :$elems) is export {
     b;
 }
 
-our sub blob-from-pointer(Pointer:D \ptr, Int :$elems!, Mu :$type) is export {
+our sub blob-from-pointer(Pointer:D \ptr, Int :$elems!, Mu :$type = uint8) is export {
+    my sub memcpy(Blob:D $dest, Pointer $src, size_t $size)
+	returns Pointer is native() { * };
     my \t = ptr.of ~~ void ?? $type !! ptr.of;
-    my \b = blob-new(t, :$elems);
-    my $bb = BODY_OF(b);
-    memcpy($bb.any, ptr, $elems * nativesizeof(t));
-    b;
+    if  nativesizeof(t) != nativesizeof($type) {
+	fail "Pointer type don't match Buf type";
+    }
+    my $b = (t === uint8) ?? Buf !! Buf.^parameterize($type);
+    with ptr {
+	$b .= allocate($elems);
+	memcpy($b, ptr, $elems * nativesizeof(t));
+    }
+    $b;
 }
 
 our sub blob-from-carray(CArray:D \array, Int :$size) is export {
@@ -60,4 +68,4 @@ our sub blob-from-carray(CArray:D \array, Int :$size) is export {
     blob-from-pointer($cb.storage, :$elems, :type(t));
 }
 
-
+# vim: ft=perl6:st=4:sw=4

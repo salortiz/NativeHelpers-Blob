@@ -54,3 +54,4 @@ sub BODY_OF(Mu \any) is export {
     die "Can only handle " ~ %known-bodies.keys if type ~~ Nil;
     nativecast(Pointer[type], OBJECT_BODY(any)).deref;
 }
+# vim: ft=perl6:st=4:sw=4
