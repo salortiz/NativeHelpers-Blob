@@ -1,6 +1,6 @@
 use v6;
 
-unit module NativeHelpers::Blob:ver<0.1.1>;
+unit module NativeHelpers::Blob:ver<0.1.2>;
 use NativeCall;
 use MoarVM::Guts::REPRs;
 use nqp;
@@ -40,7 +40,7 @@ our sub carray-is-managed(CArray:D \array) is export {
 }
 
 our sub blob-new(Mu \type = uint8, :$elems) is export {
-    my \b = Blob[type].new;
+    my \b = Buf[type].new;
     nqp::setelems(b, nqp::unbox_i($elems.Int)) if $elems;
     b;
 }
@@ -54,7 +54,11 @@ our sub blob-from-pointer(Pointer:D \ptr, Int :$elems!, Mu :$type = uint8) is ex
     }
     my $b = (t === uint8) ?? Buf !! Buf.^parameterize($type);
     with ptr {
-	$b .= allocate($elems);
+	if $b.can('allocate') {
+	    $b .= allocate($elems);
+	} else {
+	    $b = blob-new(:$elems);
+	}
 	memcpy($b, ptr, $elems * nativesizeof(t));
     }
     $b;
