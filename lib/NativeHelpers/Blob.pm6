@@ -1,6 +1,6 @@
 use v6;
 
-unit module NativeHelpers::Blob:ver<0.1.3>;
+unit module NativeHelpers::Blob:ver<0.1.4>;
 use NativeCall;
 use MoarVM::Guts::REPRs;
 use nqp; # Needed by blob-allocate
@@ -11,7 +11,7 @@ our $debug = False;
 my sub memcpy(Pointer $dest, Pointer $src, size_t $size)
     returns Pointer is native() { * };
 
-multi sub Pointer(Blob:D \b, :$typed) is export {
+multi sub BPointer(Blob:D \b, :$typed) is export {
     my \t = b.^array_type;
     my $bb = BODY_OF(b);
     note "From ", $bb.perl if $debug;
@@ -64,9 +64,9 @@ our sub blob-from-pointer(Pointer:D \ptr, Int :$elems!, Blob:U :$type = Buf) is 
     $b;
 }
 
-our sub blob-from-carray(CArray:D \array, Int :$size) is export {
-    my \t = array.^array_type;
-    my $cb = BODY_OF(array);
+our sub blob-from-carray(CArray:D \arr, Int :$size) is export {
+    my \t = arr.^array_type;
+    my $cb = BODY_OF(arr);
     die "Need :size for unmanaged CArray" unless $cb.managed || $size;
     my $elems = $cb.elems || +$size;
     blob-from-pointer($cb.storage, :$elems, :type(Buf[t]));

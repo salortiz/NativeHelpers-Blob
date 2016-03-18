@@ -18,7 +18,7 @@ At some point, these problems will be addressed in core, but in the meantime...
 
 ## Exported functions
 
-### sub Pointer(Blob:D, :$typed)
+### sub BPointer(Blob:D, :$typed)
 
 Returns a `Pointer` to the contents of the `Blob`.
 

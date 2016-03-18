@@ -12,4 +12,5 @@ our sub FreeTry {
     say "Got $p";
     free($p);
 }
+
 lives-ok { FreeTry }, "NC works";
