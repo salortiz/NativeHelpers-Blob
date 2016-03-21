@@ -36,11 +36,11 @@ is $la.shape, (10,),						   'Correct shape';
 
 is $la.nativesizeof, $size * 10,		    "Array size is { $size * 10 }";
 
-ok my $bp = $la.BarePointer,				    'Defined base pointer';
+ok my $bp = $la.bare-pointer,				    'Defined base pointer';
 isa-ok $bp, Pointer,						  'A bare pointer';
 #diag $bp;
 
-ok my $tp = $la.TypedPointer,				    'Defined type pointer';
+ok my $tp = $la.typed-pointer,				    'Defined type pointer';
 isa-ok $tp, Point3D,			    'A typed object, passed by ref to NCs';
 #diag $tp;
 
@@ -88,8 +88,8 @@ ok $ok,							'Elements in blob match';
 #diag $blob.perl;
 
 # Now a real NC tests
-is myaddr($la.TypedPointer), "0x{(+$bp).base(16).lc}",			'Indeed';
-is shown($la.TypedPointer, 3), 'x:3, y:30, z:300',			'Works!';
+is myaddr($la.typed-pointer), "0x{(+$bp).base(16).lc}",			'Indeed';
+is shown($la.typed-pointer, 3), 'x:3, y:30, z:300',			'Works!';
 
 ok $la.dispose,							   'Can dispose';
 is $la.elems, 0,						  'Now is empty';

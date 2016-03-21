@@ -51,11 +51,11 @@ role LinearArray[::T] does Positional[T] is export {
 	$sol * $!size;
     }
 
-    method BarePointer {
+    method bare-pointer {
 	$!storage;
     }
 
-    method TypedPointer {
+    method typed-pointer {
 	@!cache[0];
     }
 
@@ -67,4 +67,3 @@ role LinearArray[::T] does Positional[T] is export {
 	BODY_OF($struct).cstruct;
     }
 }
-
