@@ -5,7 +5,7 @@ use NativeCall;
 use NativeHelpers::Blob;
 use CompileTestLib;
 
-plan 23;
+plan 25;
 
 compile_test_lib('02-cstruct');
 
@@ -20,6 +20,7 @@ class Point3D is repr('CStruct') {
     has int64 $.z is rw;
 }
 
+sub myaddr(Point3D --> Str)       is native('./02-cstruct') { * }
 sub shown(Point3D, int32 --> Str) is native('./02-cstruct') { * }
 
 # Test basic properties
@@ -51,7 +52,6 @@ is +$bp, +$rp,						      'Base address match';
 #diag (+$la._Pointer(3)).base(16);
 
 # Test element access
-
 isa-ok $la[0], Point3D,					     "At 0 is-a 'Point3D'";
 ok $la[0].defined,							 'Defined';
 
@@ -63,10 +63,12 @@ dies-ok {
 },								'Outside of range';
 
 lives-ok {
-    for ^10 {
-	$la[$_].x = $_ * 1;
-        $la[$_].y = $_ * 10;
-	$la[$_].z = $_ * 100;
+    for ^10 -> $i {
+	with $la[$i] {
+	    .x = $i * 1;
+	    .y = $i * 10;
+	    .z = $i * 100;
+	}
     }
 },							 'Can set objs attributes';
 
@@ -85,7 +87,8 @@ for ^10 -> $base {
 ok $ok,							'Elements in blob match';
 #diag $blob.perl;
 
-# Now a real NC test
+# Now a real NC tests
+is myaddr($la.TypedPointer), "0x{(+$bp).base(16).lc}",			'Indeed';
 is shown($la.TypedPointer, 3), 'x:3, y:30, z:300',			'Works!';
 
 ok $la.dispose,							   'Can dispose';
