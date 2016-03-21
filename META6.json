@@ -1,7 +1,7 @@
 {
     "perl" : "6.c",
     "name" : "NativeHelpers::Blob",
-    "version" : "0.1.4",
+    "version" : "0.1.5",
     "auth" : "github:salortiz",
     "description" : "NativeCall utilities for work with Blob and CArray",
     "depends" : [ ],
@@ -11,6 +11,7 @@
     ],
     "provides" : {
 	"NativeHelpers::Blob" : "lib/NativeHelpers/Blob.pm6",
+	"NativeHelpers::CStruct" : "lib/NativeHelpers/CStruct.pm6",
 	"MoarVM::Guts::REPRs" : "lib/MoarVM/Guts/REPRs.pm6"
     },
     "repo-type" : "git",

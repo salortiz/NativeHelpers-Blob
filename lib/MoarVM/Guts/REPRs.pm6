@@ -5,7 +5,7 @@ use v6;
 #
 # When grow I'll move it to an independent module.
 
-unit module MoarVM::Guts::REPRs;
+unit module MoarVM::Guts::REPRs:ver<0.0.2>;
 use NativeCall;
 
 constant Offset = do {
@@ -40,9 +40,16 @@ my class CArrayB is repr('CStruct') {
     has int32 $.elems;
 }
 
+# The body of the 'CStruct' REPR
+my class CStructB is repr('CStruct') {
+    has Pointer[Pointer] $.child_objs;
+    has Pointer $.cstruct;
+}
+
 my %known-bodies = (
     VMArray => MVMArrayB,
-    CArray => CArrayB
+    CArray => CArrayB,
+    CStruct => CStructB
 );
 
 sub OBJECT_BODY(Mu \any) is export {

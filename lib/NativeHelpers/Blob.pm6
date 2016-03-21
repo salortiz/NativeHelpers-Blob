@@ -1,6 +1,6 @@
 use v6;
 
-unit module NativeHelpers::Blob:ver<0.1.4>;
+unit module NativeHelpers::Blob:ver<0.1.5>;
 use NativeCall;
 use MoarVM::Guts::REPRs;
 use nqp; # Needed by blob-allocate
@@ -11,7 +11,7 @@ our $debug = False;
 my sub memcpy(Pointer $dest, Pointer $src, size_t $size)
     returns Pointer is native() { * };
 
-multi sub BPointer(Blob:D \b, :$typed) is export {
+sub BPointer(Blob:D \b, :$typed) is export {
     my \t = b.^array_type;
     my $bb = BODY_OF(b);
     note "From ", $bb.perl if $debug;
@@ -52,7 +52,7 @@ our sub blob-from-pointer(Pointer:D \ptr, Int :$elems!, Blob:U :$type = Buf) is 
     if  nativesizeof(t) != nativesizeof($type.of) {
 	fail "Pointer type don't match Blob type";
     }
-    my $b = (t === uint8) ?? $type !! $type.^parameterize(t);
+    my $b = $type;
     with ptr {
 	if $b.can('allocate') {
 	    $b .= allocate($elems);
