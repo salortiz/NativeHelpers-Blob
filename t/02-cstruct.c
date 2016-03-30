@@ -21,6 +21,6 @@ DLLEXPORT char *myaddr(Point3D *points) {
 
 DLLEXPORT char *shown(Point3D *arr, int idx) {
     static char buff[100];
-    sprintf(buff, "x:%d, y:%d, z:%d", arr[idx].x, arr[idx].y, arr[idx].z);
+    sprintf(buff, "x:%lld, y:%lld, z:%lld", arr[idx].x, arr[idx].y, arr[idx].z);
     return buff;
 }
