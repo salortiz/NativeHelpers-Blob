@@ -8,16 +8,18 @@ use v6;
 unit module MoarVM::Guts::REPRs:ver<0.0.2>;
 use NativeCall;
 
+constant PPsize = nativesizeof(Pointer);
+constant intptr = PPsize == 4 ?? uint32 !! uint64;
+
 constant Offset = do {
     my Pointer \p = Pointer.new(0xdeadbeaf); # A type with a trivial REPR
-    my CArray[uint64] \ar = nativecast(CArray[uint64], Pointer.new(p.WHERE));
+    my CArray[intptr] \ar = nativecast(CArray[intptr], Pointer.new(p.WHERE));
     my $i = 0;
     repeat { last if ar[$i] == p; } while ++$i < 10;
     die "Can't determine actual Offset" if $i == 10;
-    $i * nativesizeof(uint64);
+    $i * nativesizeof(intptr);
 };
 
-constant PPsize = nativesizeof(Pointer);
 
 # The body of the 'VMArray' REPR
 my class MVMArrayB is repr('CStruct') {
