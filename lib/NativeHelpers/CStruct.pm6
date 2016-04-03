@@ -3,7 +3,7 @@ use v6;
 unit module NativeHelpers::CStruct:ver<0.1.0>;
 use NativeCall;
 use MoarVM::Guts::REPRs;
-use nqp;
+#use nqp;
 
 our $debug = False;
 
@@ -47,15 +47,15 @@ role LinearArray[::T] does Positional[T] is export {
 	}
     }
 
-    method nativesizeof {
+    method nativesizeof() {
 	$sol * $!size;
     }
 
-    method bare-pointer {
+    method bare-pointer() {
 	$!storage;
     }
 
-    method typed-pointer {
+    method typed-pointer() {
 	@!cache[0];
     }
 

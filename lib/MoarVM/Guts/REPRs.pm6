@@ -5,11 +5,11 @@ use v6;
 #
 # When grow I'll move it to an independent module.
 
-unit module MoarVM::Guts::REPRs:ver<0.0.2>;
+unit module MoarVM::Guts::REPRs:ver<0.0.3>;
 use NativeCall;
 
-constant PPsize = nativesizeof(Pointer);
-constant intptr = PPsize == 4 ?? uint32 !! uint64;
+constant ptrsize is export = nativesizeof(Pointer);
+constant intptr is export = ptrsize == 4 ?? uint32 !! uint64;
 
 constant Offset = do {
     my Pointer \p = Pointer.new(0xdeadbeaf); # A type with a trivial REPR
@@ -17,7 +17,7 @@ constant Offset = do {
     my $i = 0;
     repeat { last if ar[$i] == p; } while ++$i < 10;
     die "Can't determine actual Offset" if $i == 10;
-    $i * nativesizeof(intptr);
+    $i * ptrsize;
 };
 
 
@@ -29,7 +29,7 @@ my class MVMArrayB is repr('CStruct') {
     has Pointer $.any;
 
     method realstart(::?CLASS:D:) {
-	+$!start ?? Pointer.new(+$!any + +$!start * PPsize) !! $!any;
+	+$!start ?? Pointer.new(+$!any + +$!start * ptrsize) !! $!any;
     }
 }
 
