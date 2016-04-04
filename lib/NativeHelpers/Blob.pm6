@@ -1,12 +1,11 @@
 use v6;
 
-unit module NativeHelpers::Blob:ver<0.1.6>;
+unit module NativeHelpers::Blob:ver<0.1.7>;
 use NativeCall;
 use MoarVM::Guts::REPRs;
 use nqp; # Needed by blob-allocate
 
 our $debug = False;
-
 
 my sub memcpy(Pointer $dest, Pointer $src, size_t $size)
     returns Pointer is native() { * };
@@ -47,6 +46,15 @@ multi sub sizeof(Mu:D \arr) is export {
 sub ptr-sized(Mu:D \arr) is export {
     my $size = sizeof(arr);
     \(pointer-to(arr), $size);
+}
+
+multi sub buf-sized(Blob:D \b) is export {
+    my $size = b.bytes;
+    \(b, $size);
+}
+
+multi sub buf-sized(Str:D \s) is export {
+    buf-sized(s.encode);
 }
 
 # back compatibility only
