@@ -1,14 +1,16 @@
 use v6;
 
-unit module NativeHelpers::Blob:ver<0.1.7>;
+unit module NativeHelpers::Blob:ver<0.1.8>;
 use NativeCall;
 use MoarVM::Guts::REPRs;
 use nqp; # Needed by blob-allocate
 
+constant stdlib = Rakudo::Internals.IS-WIN ?? 'msvcrt' !! Str;
+
 our $debug = False;
 
 my sub memcpy(Pointer $dest, Pointer $src, size_t $size)
-    returns Pointer is native() { * };
+    returns Pointer is native(stdlib) { * };
 
 multi sub pointer-to(Blob:D \blob, :$typed) is export {
     my \t = blob.^array_type;
@@ -90,7 +92,7 @@ our sub blob-allocate(Blob:U \blob, $elems) is export {
 
 our sub blob-from-pointer(Pointer:D \ptr, Int :$elems!, Blob:U :$type = Buf) is export {
     my sub memcpy(Blob:D $dest, Pointer $src, size_t $size)
-	returns Pointer is native() { * };
+	returns Pointer is native(stdlib) { * };
     my \t = ptr.of ~~ void ?? $type.of !! ptr.of;
     if  nativesizeof(t) != nativesizeof($type.of) {
 	fail "Pointer type don't match Blob type";

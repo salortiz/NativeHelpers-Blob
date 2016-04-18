@@ -4,7 +4,7 @@ unit module NativeHelpers::CStruct:ver<0.1.0>;
 use NativeCall;
 use MoarVM::Guts::REPRs;
 #use nqp;
-
+constant stdlib = Rakudo::Internals.IS-WIN ?? 'msvcrt' !! Str;
 our $debug = False;
 
 role LinearArray[::T] does Positional[T] is export {
@@ -17,7 +17,7 @@ role LinearArray[::T] does Positional[T] is export {
     has Int $!size;
 
     submethod BUILD(:$!size!) {
-	sub calloc(size_t, size_t --> Pointer) is native() { * }
+	sub calloc(size_t, size_t --> Pointer) is native(stdlib) { * }
 	@!cache := Array[ty].new(:shape($!size));
 	with calloc($!size, $sol) -> $storage {
 	    $!storage = $storage;
@@ -36,7 +36,7 @@ role LinearArray[::T] does Positional[T] is export {
     }
 
     method dispose(::?CLASS:D:) {
-	sub free(Pointer) is native() { * }
+	sub free(Pointer) is native(stdlib) { * }
 	with $!storage {
 	    @!cache := ();
 	    free($!storage);

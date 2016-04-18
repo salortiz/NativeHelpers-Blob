@@ -1,10 +1,13 @@
 #include <stdio.h>
-#include <stdint.h>
 
 #ifdef _WIN32
 #define DLLEXPORT __declspec(dllexport)
+typedef long long int64_t;
+#define PF "0x%p"
 #else
 #define DLLEXPORT extern
+#include <stdint.h>
+#define PF "%p"
 #endif
 
 typedef struct point3d_t {
@@ -15,7 +18,7 @@ typedef struct point3d_t {
 
 DLLEXPORT char *myaddr(Point3D *points) {
     static char buff[20];
-    sprintf(buff, "%p", points);
+    sprintf(buff, PF, points);
     return buff;
 }
 
