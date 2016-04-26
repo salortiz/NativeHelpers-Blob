@@ -2,7 +2,7 @@ use v6;
 use Test;
 use NativeCall;
 
-plan 19;
+plan 10;
 
 use NativeHelpers::Pointer;
 
