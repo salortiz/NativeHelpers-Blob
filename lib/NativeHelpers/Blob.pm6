@@ -91,8 +91,6 @@ our sub blob-allocate(Blob:U \blob, $elems) is export {
 }
 
 our sub blob-from-pointer(Pointer:D \ptr, Int :$elems!, Blob:U :$type = Buf) is export {
-    my sub memcpy(Blob:D $dest, Pointer $src, size_t $size)
-	returns Pointer is native(stdlib) { * };
     my \t = ptr.of ~~ void ?? $type.of !! ptr.of;
     if  nativesizeof(t) != nativesizeof($type.of) {
 	fail "Pointer type don't match Blob type";
