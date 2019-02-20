@@ -1,11 +1,11 @@
 use v6;
 
-# This is ia module for access the guts of MoarVM's REPRs
+# This is a module for access the guts of MoarVM's REPRs
 # Right now lives here because it is incomplete, undocumented and is mainly a prof of concept
 #
 # When grow I'll move it to an independent module.
 
-unit module MoarVM::Guts::REPRs:ver<0.0.3>;
+unit module MoarVM::Guts::REPRs:ver<0.0.4>;
 use NativeCall;
 
 constant ptrsize is export = nativesizeof(Pointer);
@@ -42,16 +42,22 @@ my class CArrayB is repr('CStruct') {
     has int32 $.elems;
 }
 
-# The body of the 'CStruct' REPR
-my class CStructB is repr('CStruct') {
+# The old body of the 'CStruct' REPR
+my class OldCStructB is repr('CStruct') {
     has Pointer[Pointer] $.child_objs;
     has Pointer $.cstruct;
+}
+
+# From Moar v2018.12+ the body of 'CStruct' REPR changed
+my class CStructB is repr('CStruct') {
+    has Pointer $.cstruct;
+    has Pointer[Pointer] $.child_objs;
 }
 
 my %known-bodies = (
     VMArray => MVMArrayB,
     CArray => CArrayB,
-    CStruct => CStructB
+    CStruct => $*VM.version >= v2018.12.*+ ?? CStructB !! OldCStructB
 );
 
 sub OBJECT_BODY(Mu \any) is export {
