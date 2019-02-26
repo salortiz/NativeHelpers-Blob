@@ -57,7 +57,7 @@ my class CStructB is repr('CStruct') {
 my %known-bodies = (
     VMArray => MVMArrayB,
     CArray => CArrayB,
-    CStruct => $*VM.version >= v2018.12.*+ ?? CStructB !! OldCStructB
+    CStruct => $*VM.version >= v2018.12.110.*+ ?? CStructB !! OldCStructB
 );
 
 sub OBJECT_BODY(Mu \any) is export {
