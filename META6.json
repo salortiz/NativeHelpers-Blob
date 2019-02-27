@@ -1,7 +1,7 @@
 {
     "perl" : "6.c",
     "name" : "NativeHelpers::Blob",
-    "version" : "0.1.11",
+    "version" : "0.1.12",
     "auth" : "github:salortiz",
     "description" : "NativeCall utilities for work with Blob and CArray",
     "depends" : [ ],

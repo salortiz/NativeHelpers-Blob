@@ -5,7 +5,7 @@ use v6;
 #
 # When grow I'll move it to an independent module.
 
-unit module MoarVM::Guts::REPRs:ver<0.0.4>;
+unit module MoarVM::Guts::REPRs:ver<0.0.5>;
 use NativeCall;
 
 constant ptrsize is export = nativesizeof(Pointer);
