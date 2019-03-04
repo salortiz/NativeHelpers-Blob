@@ -1,6 +1,6 @@
 use v6;
 
-unit module NativeHelpers::CStruct:ver<0.1.2>;
+unit module NativeHelpers::CStruct:ver<0.1.3>;
 use NativeCall;
 use MoarVM::Guts::REPRs;
 #use nqp;
@@ -37,6 +37,11 @@ role LinearArray[::T] does Positional[T] is export {
 
     method new-from-pointer(::?CLASS:U: Int :$size, Pointer :$ptr) {
 	self.bless(:$size, :storage(nativecast(Pointer,$ptr)), :!managed);
+    }
+
+    sub memmove(Pointer, Pointer, size_t) is native(stdlib) { * }
+    method ASSIGN-POS(::?CLASS:D: $idx, T:D \st) {
+	memmove(self._Pointer($idx), pointer-to(st), nativesizeof(st));
     }
 
     sub free(Pointer) is native(stdlib) { * }
